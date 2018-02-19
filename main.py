@@ -22,8 +22,6 @@ outputs = np.array([10,13,16,19,22,25])
 def hypothesis(x):
     return(np.dot(qs_for_hypot,x))
 
-for i in range (iterations):
-    point = np.random.randint(len(data))
 
 for iter in range (iterations):
     for i in range (len(data)):
