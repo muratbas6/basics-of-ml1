@@ -31,7 +31,7 @@ def gradientDescent(X, y, theta, iters, alpha):
     return theta, cost
 
 
-# running the gd and cost function
+
 g, cost = gradientDescent(X, y, theta, iters, alpha)
 print(g)
 
