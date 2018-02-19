@@ -1,36 +1,48 @@
-from matplotlib import pyplot as plt
 import numpy as np
-sum_error = 0
-learning_rate = 0.1
-iterations= 100000
-data =np.array([[1,2,3,4],
-                [1,3,4,5],
-                [1,4,5,6],
-                [1,5,6,7],
-                [1,6,7,8],
-                [1,7,8,9]])
+import pandas as pd
+import matplotlib.pyplot as plt
+
+my_data = pd.read_csv('data.txt',names=["x0","x1","y"]) #read the data
 
 
-Qs = np.random.rand(4,1)
-qs_for_hypot = np.reshape(Qs,(1,4))
-print(qs_for_hypot)
-print("PARAMETERS",Qs)
-outputs = np.array([10,13,16,19,22,25])
+X = my_data.iloc[:,0:2]
+ones = np.ones([X.shape[0],1])
+X = np.concatenate((ones,X),axis=1)
+print(X)
+y = my_data.iloc[:,2:3].values
+theta = np.zeros([1,3])
+
+alpha = 0.01
+iters = 100000
 
 
 
-def hypothesis(x):
-    return(np.dot(qs_for_hypot,x))
+def computeCost(X,y,theta):
+    tobesummed = np.power(((X @ theta.T)-y),2)
+    return np.sum(tobesummed)/(2 * len(X))
 
 
-for iter in range (iterations):
-    for i in range (len(data)):
-        for j in range(len(Qs)):
-            squared_error = ((hypothesis(data[i]) - outputs[i]) ** 2)
-            Qs[j] = Qs[j]-learning_rate*1/6*(((hypothesis(data[i])-outputs[i])*data[i][j]))
-            print("SQUARED_ERROR",squared_error)
-    if (squared_error==0):
-        break
+def gradientDescent(X, y, theta, iters, alpha):
+    cost = np.zeros(iters)
+    for i in range(iters):
+        theta = theta - (alpha / len(X)) * np.sum(X * (X @ theta.T - y), axis=0)
+        cost[i] = computeCost(X, y, theta)
 
-print("PARAMETER",Qs)
-print("PREDICT",hypothesis([1,2,5,5]))
+    return theta, cost
+
+
+# running the gd and cost function
+g, cost = gradientDescent(X, y, theta, iters, alpha)
+print(g)
+
+finalCost = computeCost(X, y, g)
+print(finalCost)
+
+print(np.dot([1,644,444],g.T))
+
+fig, ax = plt.subplots()
+ax.plot(np.arange(iters), cost, 'r')
+ax.set_xlabel('Iterations')
+ax.set_ylabel('Cost')
+ax.set_title('Error vs. Training Epoch')
+plt.show()
