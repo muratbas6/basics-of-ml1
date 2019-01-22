@@ -1,2 +1,2 @@
-# basic-ml1
+# basics-ml1
 Multivariate Linear Regression with Python
